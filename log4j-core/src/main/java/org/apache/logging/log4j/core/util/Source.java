@@ -27,12 +27,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.status.StatusLogger;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  * Represents the source for the logging configuration as an immutable object.
  */
 public class Source {
+    private static final Logger LOGGER = StatusLogger.getLogger();
 
     private static String normalize(final File file) {
         try {
@@ -50,10 +54,18 @@ public class Source {
         }
     }
 
+    // LOG4J2-3527 - Don't use Paths.get().
     private static File toFile(final URI uri) {
         try {
-            return toFile(Paths.get(Objects.requireNonNull(uri, "uri")));
+            final String scheme = Objects.requireNonNull(uri, "uri").getScheme();
+            if (Strings.isBlank(scheme) || scheme.equals("file")) {
+                return new File(uri.getPath());
+            } else {
+                LOGGER.debug("uri does not represent a local file: " + uri);
+                return null;
+            }
         } catch (final Exception e) {
+            LOGGER.debug("uri is malformed: " + uri.toString());
             return null;
         }
     }
@@ -133,7 +145,7 @@ public class Source {
      * Constructs a new {@code Source} from the specified URL.
      *
      * @param url the URL where the input stream originated
-     * @throws IllegalArgumentException if this URL is not formatted strictly according to to RFC2396 and cannot be
+     * @throws IllegalArgumentException if this URL is not formatted strictly according to RFC2396 and cannot be
      *         converted to a URI.
      */
     public Source(final URL url) {

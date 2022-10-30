@@ -38,11 +38,11 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.message.MapMessage;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ObjectMessage;
 import org.apache.logging.log4j.message.SimpleMessage;
-import org.apache.logging.log4j.test.appender.ListAppender;
 import org.apache.logging.log4j.util.Constants;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.AfterClass;
@@ -94,6 +94,7 @@ public class CategoryTest {
     public void testForcedLog() {
         final MockCategory category = new MockCategory("org.example.foo");
         category.setAdditivity(false);
+        category.setHierarchy(LogManager.getHierarchy());
         ((org.apache.logging.log4j.core.Logger) category.getLogger()).addAppender(appender);
         // Logging a String
         category.info("Hello, World");

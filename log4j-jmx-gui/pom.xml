@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j</artifactId>
-    <version>2.17.3-SNAPSHOT</version>
+    <version>2.19.1-SNAPSHOT</version>
   </parent>
   <artifactId>log4j-jmx-gui</artifactId>
   <packaging>jar</packaging>
@@ -47,8 +47,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <type>test-jar</type>
+      <artifactId>log4j-core-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -59,21 +58,6 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- Include the standard NOTICE and LICENSE -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-remote-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>process</goal>
-            </goals>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -91,7 +75,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>${changes.plugin.version}</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -107,7 +90,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${checkstyle.plugin.version}</version>
         <configuration>
           <!--<propertiesLocation>${vfs.parent.dir}/checkstyle.properties</propertiesLocation> -->
           <configLocation>${log4jParentDir}/checkstyle.xml</configLocation>
@@ -120,11 +102,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${javadoc.plugin.version}</version>
         <configuration>
-          <bottom><![CDATA[<p align="center">Copyright &#169; {inceptionYear}-{currentYear} {organizationName}. All Rights Reserved.<br />
+          <bottom>&lt;p align="center"&gt;Copyright &amp;#169; {inceptionYear}-{currentYear} {organizationName}. All Rights Reserved.&lt;br /&gt;
             Apache Logging, Apache Log4j, Log4j, Apache, the Apache feather logo, the Apache Logging project logo,
-            and the Apache Log4j logo are trademarks of The Apache Software Foundation.</p>]]></bottom>
+            and the Apache Log4j logo are trademarks of The Apache Software Foundation.&lt;/p&gt;</bottom>
           <!-- module link generation is completely broken in the javadoc plugin for a multi-module non-aggregating
                project -->
           <detectOfflineLinks>false</detectOfflineLinks>
@@ -140,13 +121,8 @@
         </reportSets>
       </plugin>
       <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>${jxr.plugin.version}</version>
         <reportSets>
           <reportSet>
             <id>non-aggregate</id>
@@ -165,10 +141,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${pmd.plugin.version}</version>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>
@@ -188,7 +167,6 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>jconsole</artifactId>
-          <version>1.7.0</version>
           <scope>system</scope>
           <systemPath>${java.home}/../lib/jconsole.jar</systemPath>
           <optional>true</optional>
@@ -207,7 +185,6 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>jconsole</artifactId>
-          <version>1.7.0</version>
           <scope>system</scope>
           <systemPath>${java.home}/../Classes/jconsole.jar</systemPath>
           <optional>true</optional>
@@ -226,7 +203,6 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>jconsole</artifactId>
-          <version>1.7.0</version>
           <scope>system</scope>
           <systemPath>${jenkins.java.home}/lib/jconsole.jar</systemPath>
           <optional>true</optional>
@@ -235,4 +211,3 @@
     </profile>
   </profiles>
 </project>
-

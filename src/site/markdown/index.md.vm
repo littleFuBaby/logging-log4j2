@@ -21,12 +21,13 @@
 #set($h3='###')
 #set($h4='####')
 
-$h1 Apache Log4j 2
+$h1 Apache Log4j™ 2
 
 Apache Log4j 2 is an upgrade to Log4j that provides significant improvements over its predecessor, Log4j 1.x, and
 provides many of the improvements available in Logback while fixing some inherent problems in Logback's architecture.
 
 <a name="CVE-2021-44832"/>
+
 $h2 Important: Security Vulnerability CVE-2021-44832
 
 Summary: Apache Log4j2 vulnerable to RCE via JDBC Appender when attacker controls configuration.
@@ -146,9 +147,9 @@ See [Logging in the Cloud](manual/cloud.html) for details.
 
 $h3 Compatible with Log4j 1.x
 
-The Log4j-1.2-api module of Log4j 2 provides compatiblity for applications using the Log4j 1 logging methods. As
+The Log4j-1.2-api module of Log4j 2 provides compatibility for applications using the Log4j 1 logging methods. As
 of Log4j 2.13.0 Log4j 2 also provides experimental support for Log4j 1.x configuration files. See
-[Log4j 2 Compatiblity with Log4j 1](manual/compatibility.html) for more information.
+[Log4j 2 Compatibility with Log4j 1](manual/compatibility.html) for more information.
 
 $h2 Documentation
 

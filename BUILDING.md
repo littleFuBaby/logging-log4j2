@@ -14,48 +14,48 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-# Building Log4j 2.x
 
-To build Log4j 2.x, you need Java 8 and Java 11 compilers, and Apache Maven 3.x.
+# Requirements
 
-Log4j 2.x uses the Java 11 compiler in addition to
-the Java version installed in the path. This is accomplished by using Maven's toolchains support.
-Log4j 2 provides sample toolchains XML files in the root folder. This may be used by
-modifying it and installing the file as toolchains.xml in the .m2 folder or by using the
-following when invoking Maven.
+* JDK 8 and 9+
+* Apache Maven 3.x
+* A modern Linux, OSX, or Windows host
 
-```
-[Macintosh] -t ./toolchains-sample-mac.xml
-[Windows] -t ./toolchains-sample-win.xml
-[Linux] -t ./toolchains-sample-linux.xml
-```
+<a name="toolchains"></a>
+# Configuring Maven Toolchains
 
-To perform the license release audit, a.k.a. "RAT check", run.
+Maven Toolchains is used to employ multiple JDKs required for compilation.
+You either need to have a user-level configuration in `~/.m2/toolchains.xml` or explicitly provide one to the Maven: `./mvnw --global-toolchains /path/to/toolchains.xml`.
+See [`.github/workflows/maven-toolchains.xml`](.github/workflows/maven-toolchains.xml) used by CI for a sample Maven Toolchains configuration.
+Note that this file requires `JAVA_HOME_8_X64` and `JAVA_HOME_11_X64` environment variables to be defined, though these can very well be hardcoded.
 
-    mvn apache-rat:check
+<a name="building"></a>
+# Building the sources
 
-To install the jars in your local Maven repository, from a command line, run:
+You can build and verify the sources as follows:
 
-    mvn clean install
+    ./mvnw verify
 
-Once install is run, you can run the Clirr check on the API and 1.2 API modules:
+`verify` goal runs validation and test steps next to building (i.e., compiling) the sources.
+To speed up the build, you can skip verification:
 
-    mvn clirr:check -pl log4j-api
+    ./mvnw -DskipTests package
 
-    mvn clirr:check -pl log4j-1.2-api
+If you want to install generated artifacts to your local Maven repository, replace above `verify` and/or `package` goals with `install`.
 
-Next, to build the site:
+<a name="dns"></a>
+## DNS lookups in tests
 
-    mvn site
+Note that if your `/etc/hosts` file does not include an entry for your computer's hostname, then
+many unit tests may execute slow due to DNS lookups to translate your hostname to an IP address in
+[`InetAddress.getLocalHost()`](http://docs.oracle.com/javase/7/docs/api/java/net/InetAddress.html#getLocalHost()).
+To remedy this, you can execute the following:
 
-On Windows, use a local staging directory, for example:
+    printf '127.0.0.1 %s\n::1 %s\n' `hostname` `hostname` | sudo tee -a /etc/hosts
 
-    mvn site:stage-deploy -DstagingSiteURL=file:///%HOMEDRIVE%%HOMEPATH%/log4j
+<a name="website"></a>
+# Building the website and manual
 
-On UNIX, use a local staging directory, for example:
+You can build the website and manual as follows:
 
-    mvn site:stage-deploy -DstagingSiteURL=file:///$HOME/log4j
-
-To test, run:
-
-    mvn clean install
+    ./mvnw --non-recursive -Dmaven.doap.skip -DskipTests site

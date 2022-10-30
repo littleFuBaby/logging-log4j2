@@ -37,7 +37,6 @@ import org.apache.log4j.spi.AppenderAttachable;
 import org.apache.log4j.spi.HierarchyEventListener;
 import org.apache.log4j.spi.LoggerRepository;
 import org.apache.log4j.spi.LoggingEvent;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.message.LocalizedMessage;
 import org.apache.logging.log4j.message.MapMessage;
 import org.apache.logging.log4j.message.Message;
@@ -174,13 +173,10 @@ public class Category implements AppenderAttachable {
     protected Category(final LoggerContext context, final String name) {
         this.name = name;
         this.logger = context.getLogger(name);
-        this.repository = LogManager.getLoggerRepository();
-        // this.rendererMap = ((RendererSupport) repository).getRendererMap();
     }
 
     Category(final org.apache.logging.log4j.Logger logger) {
         this.logger = logger;
-        // rendererMap = ((RendererSupport) LogManager.getLoggerRepository()).getRendererMap();
     }
 
     /**
@@ -430,7 +426,7 @@ public class Category implements AppenderAttachable {
     }
 
     /**
-     * Gets the the {@link LoggerRepository} where this <code>Category</code> instance is attached.
+     * Gets the {@link LoggerRepository} where this <code>Category</code> instance is attached.
      *
      * @deprecated Please use {@link #getLoggerRepository()} instead.
      * @since 1.1
@@ -453,7 +449,7 @@ public class Category implements AppenderAttachable {
     }
 
     /**
-     * Gets the the {@link LoggerRepository} where this <code>Category</code> is attached.
+     * Gets the {@link LoggerRepository} where this <code>Category</code> is attached.
      *
      * @since 1.2
      */
@@ -475,8 +471,12 @@ public class Category implements AppenderAttachable {
             return null;
         }
         final ConcurrentMap<String, Logger> loggers = Hierarchy.getLoggersMap(loggerContext);
-        final Logger parentLogger = loggers.get(parent.getName());
-        return parentLogger == null ? new Category(parent) : parentLogger;
+        Category parentLogger = loggers.get(parent.getName());
+        if (parentLogger == null) {
+            parentLogger = new Category(parent);
+            parentLogger.setHierarchy(getLoggerRepository());
+        }
+        return parentLogger;
     }
 
     public final Level getPriority() {

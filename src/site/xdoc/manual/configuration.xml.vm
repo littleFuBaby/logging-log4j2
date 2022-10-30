@@ -370,18 +370,18 @@ public class Bar {
         <a name="Configuration From a URI"/>
         <subsection name="Configuration From a URI">
           <p>
-            When <code>log4j2.configurationFile</code> references a URL Log4j will first determine if the URL reference
-            a file using the file protocol. If it does Log4j will validate that the file url is valid and continue
+            When <code>log4j2.configurationFile</code> references a URL, Log4j will first determine if the URL reference
+            a file using the file protocol. If it does Log4j will validate that the file URL is valid and continue
             processing as previously described. If it contains a protocol other than file then Log4j will inspect
             the value of the <code>log4j2.Configuration.allowedProtocols</code> system property. If the provided list
             contains the protocol specified then Log4j will use the URI to locate the specified configuration file. If
             not an exception will be thrown and an error message will be logged. If no value is provided for the
-            system property it will default to "https". Use of any protocol other than "file" can be prevented by
-            setting the system property value to "_none". This value would be an invalid protocol so cannot conflict
-            with any custom protocols that may be present.
+            system property it will default to "https, file, jar". Use of any protocol other than "file" can be
+            prevented by setting the system property value to "_none". This value would be an invalid protocol so cannot
+            conflict with any custom protocols that may be present.
           </p>
           <p>
-            Log4j supports access to remote urls that require authentication. Log4j supports basic authentication
+            Log4j supports access to remote URLs that require authentication. Log4j supports basic authentication
             out of the box. If the <code>log4j2.Configuration.username</code> and <code>log4j2.Configuration.password</code>
             are specified those values will be used to perform the authentication. If the password is encrypted a custom
             password decryptor may be supplied by specifying the fully qualified class name in the
@@ -649,7 +649,7 @@ public class Bar {
             The concise format makes configuration very easy as the element names match the components they represent
             however it cannot be validated with an XML schema. For example, the ConsoleAppender is configured by
             declaring an XML element named Console under its parent appenders element. However, element
-            and attribute names are are not case sensitive. In addition, attributes can either be specified
+            and attribute names are not case sensitive. In addition, attributes can either be specified
             as an XML attribute or as an XML element that has no attributes and has a text value. So
           </p>
           <pre class="prettyprint"><![CDATA[<PatternLayout pattern="%m%n"/>]]></pre>
@@ -1558,7 +1558,7 @@ rootLogger = info, STDOUT
         <subsection name="Composite Configuration">
             <p>
               Log4j allows multiple configuration files to be used by specifying them as a list of comma separated
-              file paths on log4j.configurationFile or, when using urls, by adding secondary configuration
+              file paths on log4j.configurationFile or, when using URLs, by adding secondary configuration
               locations as query parameters named "override".  The merge logic can be controlled by specifying a class
                 that implements the MergeStrategy interface on the log4j.mergeStrategy property. The default
                 merge strategy will merge the files using the following rules:
@@ -1866,8 +1866,27 @@ public class AwesomeTest {
               <th>Description</th>
             </tr>
             <tr>
-              <td>Environment Variables</td>
+              <td>Spring Boot Properties</td>
               <td>-100</td>
+              <td>
+                This property source is enabled only if the Java application uses Spring Boot and the
+                <code>log4j-spring</code> module is present. It resolves properties using a Spring
+                <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/env/Environment.html">Environment</a>. 
+              </td>
+            </tr>
+            <tr>
+              <td>System Properties</td>
+              <td>0</td>
+              <td>
+                All properties can be set using normal system property patterns. These have the lowest numerical priority 
+                among commonly available property sources and can override properties files or environment variables.
+                If a <code>log4j2.system.properties</code> file is available on the classpath its contents are
+                sourced into Java system properties at Log4j startup.
+              </td>
+            </tr>
+            <tr>
+              <td>Environment Variables</td>
+              <td>100</td>
               <td>
                 Environment variables are all prefixed with <code>LOG4J_</code>, are in all caps, and words are all
                 separated by underscores. Only this naming scheme is support for environment variables as there were
@@ -1876,19 +1895,11 @@ public class AwesomeTest {
             </tr>
             <tr>
               <td><code>log4j2.component.properties</code> file</td>
-              <td>0</td>
+              <td>200</td>
               <td>
                 Including this file on the classpath can be used as an alternative to providing properties as system
-                properties. This has priority over system properties, but they can be overridden by environment
-                variables as described above.
-              </td>
-            </tr>
-            <tr>
-              <td>System Properties</td>
-              <td>100</td>
-              <td>
-                All properties can be set using normal system property patterns. These have the lowest priority and
-                can be overridden by included properties files or environment variables.
+                properties. This is the property source with highest numerical priority and can be used to provide
+                default values that can be overridden by the system administrator.
               </td>
             </tr>
           </table>
@@ -2023,8 +2034,8 @@ public class AwesomeTest {
     <td>LOG4J_CONFIGURATION_ALLOWED_PROTOCOLS</td>
     <td>&nbsp;</td>
     <td>
-      A comma separated list of the protocols that may be used to load a configuration file. The default is https.
-      To completely prevent accessing the configuration via a URL specify a value of "_none".
+      A comma separated list of the protocols that may be used to load a configuration file. The default is
+      "https, file, jar". To completely prevent accessing the configuration via a URL specify a value of "_none".
     </td>
   </tr>
   <tr>
@@ -2636,7 +2647,7 @@ public class AwesomeTest {
     <td>
       Default LoggerAdapter to use in the JUL adapter. By default, if log4j-core is available, then the class
       <code>org.apache.logging.log4j.jul .CoreLoggerAdapter</code> will be used. Otherwise, the
-      <code>ApiLogggerAdapter</code> will be used. Custom implementations must provide a public default constructor.
+      <code>ApiLoggerAdapter</code> will be used. Custom implementations must provide a public default constructor.
     </td>
   </tr>
   <tr>

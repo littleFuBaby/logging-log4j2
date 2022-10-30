@@ -25,8 +25,6 @@ on:
   schedule:
     - cron: '32 12 * * 5'
 
-permissions: read-all
-
 jobs:
 
   analyze:
@@ -47,11 +45,11 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@dcd71f646680f2efd8db4afa5ad64fdcba30e748   # 3.0.1
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8   # 3.1.0
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@cc7986c02bac29104a72998e67239bb5ee2ee110    # 2.1.28
         with:
           languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here or in a config file.
@@ -62,7 +60,7 @@ jobs:
       # JDK 11 is needed for the build.
       # Search `maven-toolchains-plugin` usages for details.
       - name: Setup JDK 11
-        uses: actions/setup-java@9519cf1382ac8dc61ad461f7f7cb45f033220189   # 3.1.1
+        uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc   # 3.6.0
         with:
           distribution: temurin
           java-version: 11
@@ -73,7 +71,7 @@ jobs:
       # JDK 8 is needed for the build, and it is the primary bytecode target.
       # Hence, JDK 8 is set up after 11, so that JAVA_HOME used by Maven during build will point to 8.
       - name: Setup JDK 8
-        uses: actions/setup-java@9519cf1382ac8dc61ad461f7f7cb45f033220189   # 3.1.1
+        uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc   # 3.6.0
         with:
           distribution: temurin
           java-version: 8
@@ -91,4 +89,4 @@ jobs:
           --global-toolchains ".github/workflows/maven-toolchains.xml"
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@935969c6f771d9f0a35efa2ae9cf7c10d9886ca3    # 2.8.5
+        uses: github/codeql-action/analyze@cc7986c02bac29104a72998e67239bb5ee2ee110    # 2.1.28

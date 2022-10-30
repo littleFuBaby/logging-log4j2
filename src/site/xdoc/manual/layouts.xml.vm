@@ -1332,12 +1332,21 @@ WARN  [main]: Message 2</pre>
                 <p>You can override the default colors in the optional {style} option. For example:
  #if ($isPDF)
                  <pre>%highlight{%d [%t] %-5level: %msg%n%throwable}
-   {FATAL=white, ERROR=red, WARN=blue, INFO=black,
-    DEBUG=green, TRACE=blue}</pre>
+   {FATAL=white, ERROR=red, WARN=bright_blue, INFO=black,
+    DEBUG=bright_green, TRACE=blue}</pre>
  #else
-                 <pre>%highlight{%d [%t] %-5level: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}</pre>
+                 <pre>%highlight{%d [%t] %-5level: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=bright_blue, INFO=black, DEBUG=bright_green, TRACE=blue}</pre>
  #end
                 </p>
+                <p>At the same time it is possible to use true colors (24 bit). For example:
+ #if ($isPDF)
+                 <pre>%highlight{%d [%t] %-5level: %msg%n%throwable}
+   {FATAL=white, ERROR=red, WARN=bg_#5792e6 fg_#eef26b bold, INFO=black,
+    DEBUG=#3fe0a8, TRACE=blue}</pre>
+ #else
+                 <pre>%highlight{%d [%t] %-5level: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=bg_#5792e6 fg_#eef26b bold, INFO=black, DEBUG=#3fe0a8, TRACE=blue}</pre>
+ #end
+                </p>                
                 <p>You can highlight only the a portion of the log event:
                  <pre>%d [%t] %highlight{%-5level: %msg%n%throwable}</pre>
                 </p>
@@ -1733,7 +1742,7 @@ WARN  [main]: Message 2</pre>
               </td>
               <td>
                 <p>Uses ANSI escape sequences to style the result of the enclosed pattern. The style can consist of
-                  a comma separated list of style names from the following table.
+                  a whitespace separated list of style names from the following table.
                   (See Jansi <a href="#enable-jansi">configuration</a>.)
                   <table>
                     <tr>
@@ -1842,7 +1851,7 @@ WARN  [main]: Message 2</pre>
                   <pre>%style{%d{ISO8601}}{black} %style{[%t]}{blue} %style{%-5level:}{yellow} %style{%msg%n%throwable}{green}</pre>
                 </p>
 				<p>You can also combine styles:
-                  <pre>%d %highlight{%p} %style{%logger}{bright,cyan} %C{1.} %msg%n</pre>
+                  <pre>%d %highlight{%p} %style{%logger}{bright cyan} %C{1.} %msg%n</pre>
                 </p>
 				<p>You can also use <code>%</code> with a color like <code>%black</code>, <code>%blue</code>, <code>%cyan</code>, and so on. For example:
                   <pre>%black{%d{ISO8601}} %blue{[%t]} %yellow{%-5level:} %green{%msg%n%throwable}</pre>
@@ -2232,9 +2241,9 @@ at org.apache.logging.log4j.core.pattern.ExtendedThrowableTest.testException(Ext
 </PatternLayout>]]></pre>
           <h5>ScriptPatternSelector</h5>
           <p>
-            The ScriptPatternSelector executes a script as descibed in the <a href="../configuration.html#Scripts">Scripts</a> section of the
+            The ScriptPatternSelector executes a script as described in the <a href="../configuration.html#Scripts">Scripts</a> section of the
             Configuration chapter. The script is passed all the properties configured in the Properties section of the
-            configuration, the StrSubstitutor used by the Confguration in the "substitutor" variables, and the
+            configuration, the StrSubstitutor used by the Configuration in the "substitutor" variables, and the
             log event in the "logEvent" variable, and is expected to return the value of the PatternMatch key that
             should be used, or null if the default pattern should be used.
           </p>
